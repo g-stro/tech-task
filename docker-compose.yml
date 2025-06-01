@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: ${DB_HOST}
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      DB_TIMEZONE: ${DB_TIMEZONE}
+    volumes:
+      - ./sql/schema/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./sql/seeds/dev/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql
+    restart: always
+
+  tech-task:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tech_task
+    image: tech-task
+    ports:
+      - '${SERVICE_PORT}:${SERVICE_PORT}'
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_SSL_MODE: ${DB_SSL_MODE}
+      DB_TIMEZONE: ${DB_TIMEZONE}
+      SERVICE_PORT: ${SERVICE_PORT}
+    depends_on:
+      - '${DB_HOST}'
+    restart: always
+
+volumes:
+  postgres_data:
