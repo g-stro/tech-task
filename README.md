@@ -14,19 +14,26 @@ This repository implements a solution for the Software Engineer recruitment scen
 
 ## Assumptions
 1. The customer has an existing account, is already logged in and authenticated, and is eligible to make a deposit into a Cushon ISA
-2. The service must adhere to the UK ISA allowance of £20,000.00 per year
-3. The service would integrate within a much larger system but is out of the scope of the assignment
-4. Funds already exist within the system, presumable via another service
+2. The customer has not made any contributions to any existing ISAs
+3. The service must adhere to the UK ISA allowance of £20,000.00 per year
+4. The service would integrate within a much larger system but is out of the scope of the assignment
+5. Funds already exist within the system, presumable via another service
 
 ---
 
-## Example Use Case
-A customer who wishes to deposit £25,000 into a Cushon ISA all into the Cushon
-Equities Fund.
+## Example Use Cases
 
+### 1. A customer who wishes to deposit £25,000 into a Cushon ISA all into the Cushon Equities Fund.
 1. Browse the available funds
 2. Select Cushon Equities Fund
 3. Enter £25,000 as the investment amount
+4. Submit the investment request
+5. Request fails as exceeds maximum deposit allowance (£20,000)
+
+### 2. A customer who wishes to deposit £20,000 into a Cushon ISA all into the Cushon Equities Fund.
+1. Browse the available funds
+2. Select Cushon Equities Fund
+3. Enter £20,000 as the investment amount
 4. Submit the investment request
 5. View their investment details
 
@@ -49,8 +56,22 @@ Equities Fund.
 ---
 
 ## Future Enhancements
-Given more time and resources, I would:
 // TODO
+In a real-world system, an event-driven, microservices architecture would be highly suitable for processing ISA investments.
+When a user makes an investment request, an event would be created and processed asynchronously in the background. This design is both reliable and scalable.
+In its current form, this service couples investment processing and reporting too closely. Ideally, this service would be split into two separate microservices; an investment service for processing and a reporting service to persist and retrieve data.
+
+### Investment service
+Listen for and handle investment request events, primarily focusing on:
+1. validating the request
+2. Processing the investment
+   - The investment service would likely orchestrate processing with other services, such as Payment and Fulfillment services. 
+3. Send downstream for reporting
+
+### Reporting service
+A reporting service would be responsible for persisting data from multiple services and be optimised for retrieval. 
+
+Given more time and resources, I would implement these services.
 
 ---
 

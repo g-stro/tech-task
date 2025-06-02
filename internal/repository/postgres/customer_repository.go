@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/g-stro/tech-task/internal/domain/model"
+	"github.com/google/uuid"
 	"log"
 )
 
@@ -15,7 +16,7 @@ func NewCustomerRepository(db *DB) *CustomerRepository {
 	return &CustomerRepository{db: db}
 }
 
-func (r *CustomerRepository) GetByID(id string) (*model.Customer, error) {
+func (r *CustomerRepository) GetByID(id uuid.UUID) (*model.Customer, error) {
 	query := `
         SELECT id, first_name, last_name, email, created_at
         FROM customers

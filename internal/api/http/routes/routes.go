@@ -6,22 +6,22 @@ import (
 )
 
 type Handlers struct {
-	Customer *handler.CustomerHandler
+	investment *handler.InvestmentHandler
 	// ...
 }
 
 func NewHandlers(
-	customerHandler *handler.CustomerHandler,
+	customerHandler *handler.InvestmentHandler,
 	// ...
 ) *Handlers {
 	return &Handlers{
-		Customer: customerHandler,
+		investment: customerHandler,
 		// ...
 	}
 }
 
 func RegisterRoutes(mux *http.ServeMux, handlers *Handlers) {
 	// Customer routes
-	mux.HandleFunc("/customers/", handlers.Customer.HandleCustomerRequest)
+	mux.HandleFunc("/investments/", handlers.investment.HandleInvestmentRequest)
 	// ...
 }

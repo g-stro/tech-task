@@ -1,0 +1,44 @@
+package postgres
+
+import (
+	"database/sql"
+	"errors"
+	"fmt"
+	"github.com/g-stro/tech-task/internal/domain/model"
+	"github.com/google/uuid"
+)
+
+type FundRepository struct {
+	db *DB
+}
+
+func NewFundRepository(db *DB) *FundRepository {
+	return &FundRepository{db: db}
+}
+
+func (r FundRepository) GetByID(id uuid.UUID) (*model.Fund, error) {
+	query := `
+        SELECT id, name, category, currency, risk_return, created_at, updated_at)
+        FROM funds
+        WHERE id = $1
+    `
+
+	var fund model.Fund
+	err := r.db.conn.DB.QueryRow(query, id).Scan(
+		&fund.ID,
+		&fund.Name,
+		&fund.Category,
+		&fund.Currency,
+		&fund.RiskReturn,
+		&fund.CreatedAt,
+		&fund.UpdatedAt,
+	)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch fund with ID %v: %w", id, err)
+	}
+
+	return &fund, nil
+}

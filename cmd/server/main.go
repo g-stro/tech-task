@@ -11,27 +11,29 @@ import (
 )
 
 func main() {
-	// Create DB connection
+	// ProcessInvestment DB connection
 	db, err := postgres.NewPostgresDB()
 	if err != nil {
 		log.Fatalf("failed to establish database connection %v", err)
 	}
 	defer db.Close()
 
-	// Create repositories
-	customerRepo := postgres.NewCustomerRepository(db)
+	// ProcessInvestment repositories
+	investmentRepo := postgres.NewInvestmentRepository(db)
+	accountRepo := postgres.NewAccountRepository(db)
+	fundRepo := postgres.NewFundRepository(db)
 
-	// Create services
-	customerService := service.NewCustomerService(customerRepo)
+	// ProcessInvestment services
+	investmentService := service.NewInvestmentService(investmentRepo, accountRepo, fundRepo)
 
-	// Create handlers
-	customerHandler := handler.NewCustomerHandler(customerService)
+	// ProcessInvestment handlers
+	investmentHandler := handler.NewInvestmentHandler(investmentService)
 
-	// Create multiplexer
+	// ProcessInvestment multiplexer
 	mux := http.NewServeMux()
 
 	// Register routes
-	handlers := routes.NewHandlers(customerHandler)
+	handlers := routes.NewHandlers(investmentHandler)
 	routes.RegisterRoutes(mux, handlers)
 
 	server := &http.Server{

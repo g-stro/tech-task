@@ -5,6 +5,6 @@ import (
 	"github.com/google/uuid"
 )
 
-type CustomerRepository interface {
-	GetByID(id uuid.UUID) (*model.Customer, error)
+type AccountRepository interface {
+	GetByID(id uuid.UUID) (*model.Account, error)
 }
