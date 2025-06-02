@@ -51,3 +51,8 @@ func (r InvestmentRepository) Create(investment *model.Investment) (*model.Inves
 
 	return investment, nil
 }
+
+func (r InvestmentRepository) GetByAccountID(id uuid.UUID) ([]*model.Investment, error) {
+	//TODO implement me
+	return nil, nil
+}

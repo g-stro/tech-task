@@ -8,12 +8,30 @@ import (
 )
 
 type MockInvestmentRepository struct {
-	investments       map[string][]*model.Investment
+	investments       map[uuid.UUID][]*model.Investment
 	createdInvestment *model.Investment
 	err               error
 }
 
-func (m *MockInvestmentRepository) GetByAccountID(id string) ([]*model.Investment, error) {
+func NewMockInvestmentRepository() *MockInvestmentRepository {
+	return &MockInvestmentRepository{
+		investments: map[uuid.UUID][]*model.Investment{
+			fixedAccountID: {
+				{
+					ID:        fixedInvestmentID,
+					AccountID: fixedAccountID,
+					FundID:    fixedFundID,
+					Amount:    20000.00,
+					Status:    statusPending,
+					CreatedAt: fixedTime,
+					UpdatedAt: fixedTime,
+				},
+			},
+		},
+	}
+}
+
+func (m *MockInvestmentRepository) GetByAccountID(id uuid.UUID) ([]*model.Investment, error) {
 	if m.err != nil {
 		return nil, m.err
 	}

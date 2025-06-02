@@ -48,7 +48,10 @@ func (s *InvestmentService) ProcessInvestment(investment *model.Investment) (*mo
 func (s *InvestmentService) validateInvestment(accountID, fundID uuid.UUID, amount float64) error {
 	// Check account exists and is active
 	account, err := s.accountRepo.GetByID(accountID)
-	if err != nil || account == nil {
+	if err != nil {
+		return err
+	}
+	if account == nil {
 		return errors.New("account not found")
 	}
 
