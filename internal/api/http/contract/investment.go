@@ -1,5 +1,25 @@
 package contract
 
+import (
+	"github.com/g-stro/tech-task/internal/domain/model"
+	"github.com/google/uuid"
+)
+
+type InvestmentRequest struct {
+	AccountID uuid.UUID `json:"account_id"`
+	FundID    uuid.UUID `json:"fund_id"`
+	Amount    float64   `json:"amount"`
+}
+
 type InvestmentResponse struct {
 	ID string `json:"id"`
+}
+
+type InvestmentDetailsResponse struct {
+	ID        string     `json:"id"`
+	Amount    float64    `json:"amount"`
+	Status    string     `json:"status"`
+	CreatedAt string     `json:"created_at"`
+	UpdatedAt string     `json:"updated_at"`
+	Fund      model.Fund `json:"fund"`
 }

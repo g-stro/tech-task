@@ -7,21 +7,20 @@ import (
 
 type Handlers struct {
 	investment *handler.InvestmentHandler
-	// ...
+	reporting  *handler.ReportingHandler
 }
 
 func NewHandlers(
-	customerHandler *handler.InvestmentHandler,
-	// ...
+	investmentHandler *handler.InvestmentHandler,
+	reportingHandler *handler.ReportingHandler,
 ) *Handlers {
 	return &Handlers{
-		investment: customerHandler,
-		// ...
+		investment: investmentHandler,
+		reporting:  reportingHandler,
 	}
 }
 
 func RegisterRoutes(mux *http.ServeMux, handlers *Handlers) {
-	// Customer routes
 	mux.HandleFunc("/investments/", handlers.investment.HandleInvestmentRequest)
-	// ...
+	mux.HandleFunc("/accounts/{id}/investments/", handlers.reporting.HandleReportingRequest)
 }

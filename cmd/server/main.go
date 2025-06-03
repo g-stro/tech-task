@@ -25,15 +25,17 @@ func main() {
 
 	// ProcessInvestment services
 	investmentService := service.NewInvestmentService(investmentRepo, accountRepo, fundRepo)
+	reportingService := service.NewReportingService(investmentRepo, accountRepo, fundRepo)
 
 	// ProcessInvestment handlers
 	investmentHandler := handler.NewInvestmentHandler(investmentService)
+	reportingHandler := handler.NewReportingHandler(reportingService)
 
 	// ProcessInvestment multiplexer
 	mux := http.NewServeMux()
 
 	// Register routes
-	handlers := routes.NewHandlers(investmentHandler)
+	handlers := routes.NewHandlers(investmentHandler, reportingHandler)
 	routes.RegisterRoutes(mux, handlers)
 
 	server := &http.Server{

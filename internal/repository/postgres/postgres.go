@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/g-stro/tech-task/pkg/database"
 	_ "github.com/lib/pq"
+	"log"
 	"os"
 )
 
@@ -18,6 +19,7 @@ func NewPostgresDB() (*DB, error) {
 	// create connection
 	conn, err := database.NewConnection("postgres", dsn)
 	if err != nil {
+		log.Printf("failed to create connection: %v", err)
 		return nil, err
 	}
 

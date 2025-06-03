@@ -32,10 +32,11 @@ func (r *CustomerRepository) GetByID(id uuid.UUID) (*model.Customer, error) {
 		&customer.CreatedAt,
 	)
 	if errors.Is(err, sql.ErrNoRows) {
+		log.Printf("customer %s not found", id)
 		return nil, nil
 	}
 	if err != nil {
-		log.Printf("Error fetching customer %s: %v", id, err)
+		log.Printf("error fetching customer %s: %v", id, err)
 		return nil, err
 	}
 

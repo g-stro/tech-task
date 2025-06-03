@@ -6,6 +6,7 @@ import (
 	"github.com/g-stro/tech-task/internal/domain/model"
 	"github.com/g-stro/tech-task/internal/domain/repository"
 	"github.com/google/uuid"
+	"log"
 )
 
 const (
@@ -29,6 +30,7 @@ func NewInvestmentService(investRepo repository.InvestmentRepository, accRepo re
 func (s *InvestmentService) ProcessInvestment(investment *model.Investment) (*model.Investment, error) {
 	// Validate the investments
 	if err := s.validateInvestment(investment.AccountID, investment.FundID, investment.Amount); err != nil {
+		log.Printf("error validating investment: %v", err)
 		return nil, err
 	}
 

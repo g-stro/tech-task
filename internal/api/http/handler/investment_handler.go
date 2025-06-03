@@ -1,8 +1,12 @@
 package handler
 
 import (
+	"encoding/json"
+	"github.com/g-stro/tech-task/internal/api/http/contract"
+	"github.com/g-stro/tech-task/internal/domain/model"
 	"github.com/g-stro/tech-task/internal/service"
-
+	"github.com/google/uuid"
+	"log"
 	"net/http"
 )
 
@@ -24,5 +28,32 @@ func (h *InvestmentHandler) HandleInvestmentRequest(w http.ResponseWriter, r *ht
 }
 
 func (h *InvestmentHandler) createInvestment(w http.ResponseWriter, r *http.Request) {
-	// TODO
+	var req contract.InvestmentRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.Printf("error deconding JSON: %e", err)
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	investment := &model.Investment{
+		ID:        uuid.New(),
+		AccountID: req.AccountID,
+		FundID:    req.FundID,
+		Amount:    req.Amount,
+		Status:    "PENDING", // Default
+	}
+
+	result, err := h.svc.ProcessInvestment(investment)
+	if err != nil {
+		http.Error(w, "error processing request", http.StatusInternalServerError)
+		return
+	}
+
+	resp := contract.InvestmentResponse{
+		ID: result.ID.String(),
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(resp)
 }

@@ -170,7 +170,46 @@ DB_PORT_TEST=5433
 ---
 
 ## Endpoints:
-// TODO
+1. **`POST /investments/`**  
+   Creates a new investment  
+   Request body:
+   ```json
+   {
+      "account_id": "d7ee4877-7645-461a-b2cc-2f2c8f6a7284",
+      "fund_id": "cb91e975-d8bc-423b-bc99-fa6f396c2eaf",
+      "amount": 20000.00
+   }
+   ```
+   Example response:
+   ```json
+   {
+      "id": "b1e80bb6-dd4e-4981-839f-b578582c6285"
+   }
+   ```
+
+2. **`GET /accounts/{id}/investments/`**  
+   Retrieves all investments for a specific account  
+   Example response:
+   ```json
+   [
+       {
+           "id": "22be3b86-8c97-4429-855f-c3478d14230a",
+           "amount": 20000,
+           "status": "PENDING",
+           "created_at": "2025-06-03 15:24:05",
+           "updated_at": "2025-06-03 15:24:05",
+           "fund": {
+               "id": "cb91e975-d8bc-423b-bc99-fa6f396c2eaf",
+               "name": "Cushon Equities Fund",
+               "category": "EQUITY",
+               "currency": "GBP",
+               "risk_return": "LOW",
+               "created_at": "2025-06-03T15:21:09.802108Z",
+               "updated_at": "2025-06-03T15:21:09.802108Z"
+           }
+       }
+   ]
+   ```
 ---
 
 ## **Running Tests**

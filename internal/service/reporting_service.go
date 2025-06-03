@@ -5,6 +5,7 @@ import (
 	"github.com/g-stro/tech-task/internal/domain/model"
 	"github.com/g-stro/tech-task/internal/domain/repository"
 	"github.com/google/uuid"
+	"log"
 	"time"
 )
 
@@ -31,12 +32,12 @@ func (s *ReportingService) GetInvestmentsByAccountID(accountID uuid.UUID) ([]*In
 	// Check account exists
 	account, err := s.accountRepo.GetByID(accountID)
 	if err != nil {
+		log.Printf("error retrieving account %v for investment details: %v", accountID, err)
 		return nil, err
 	}
 	if account == nil {
 		return nil, errors.New("account not found")
 	}
-
 	investments, err := s.investmentRepo.GetByAccountID(accountID)
 	if err != nil {
 		return nil, err
@@ -52,6 +53,7 @@ func (s *ReportingService) GetInvestmentsByAccountID(accountID uuid.UUID) ([]*In
 		// Get associated fund
 		fund, err := s.fundRepo.GetByID(investment.FundID)
 		if err != nil {
+			log.Printf("error retrieving fund for investment %v: %e", investment.ID, err)
 			return nil, err
 		}
 
