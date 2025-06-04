@@ -33,7 +33,6 @@ func (s *ReportingService) GetInvestmentsByAccountID(accountID uuid.UUID) ([]*mo
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("funds: %v", investments[0].Funds)
 
 	if len(investments) == 0 {
 		return []*model.Investment{}, nil

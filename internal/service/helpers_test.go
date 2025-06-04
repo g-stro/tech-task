@@ -8,10 +8,10 @@ import (
 
 var fixedTime = time.Date(2025, time.January, 1, 0, 0, 0, 0, time.UTC)
 var fixedCustomerID = uuid.MustParse("6aa6cb6c-6054-4943-a0a7-f279cf6ceabd")
-var fixedInvalidCustomerID = uuid.MustParse("12345678-6054-4943-a0a7-f279cf6ceabd")
 var fixedAccountID = uuid.MustParse("d7ee4877-7645-461a-b2cc-2f2c8f6a7284")
 var fixedFundID = uuid.MustParse("cb91e975-d8bc-423b-bc99-fa6f396c2eaf")
 var fixedInvestmentID = uuid.MustParse("f9d7338c-62e9-4f60-8d3a-9082f1616a23")
+var fixedInvalidID = uuid.MustParse("12345678-6054-4943-a0a7-f279cf6ceabd")
 
 const (
 	accountNumber         = "1234567890"
@@ -82,8 +82,6 @@ func StandardFund() *model.Fund {
 		Category:   fundTypeEQUITY,
 		Currency:   fundCurrencyGBP,
 		RiskReturn: fundRiskLOW,
-		CreatedAt:  fixedTime,
-		UpdatedAt:  fixedTime,
 	}
 }
 

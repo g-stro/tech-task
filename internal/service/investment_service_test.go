@@ -9,6 +9,7 @@ import (
 
 type MockInvestmentRepository struct {
 	investments       map[uuid.UUID][]*model.Investment
+	investmentFunds   map[uuid.UUID][]*model.Fund
 	createdInvestment *model.Investment
 	err               error
 }
@@ -20,11 +21,32 @@ func NewMockInvestmentRepository() *MockInvestmentRepository {
 				{
 					ID:        fixedInvestmentID,
 					AccountID: fixedAccountID,
-					FundID:    fixedFundID,
+					Funds: []*model.Fund{
+						{
+							ID:         fixedFundID,
+							Name:       fundNameCushonEquity,
+							Category:   fundTypeEQUITY,
+							Currency:   fundCurrencyGBP,
+							Amount:     20000.00,
+							RiskReturn: fundRiskLOW,
+						},
+					},
 					Amount:    20000.00,
 					Status:    statusPending,
 					CreatedAt: fixedTime,
 					UpdatedAt: fixedTime,
+				},
+			},
+		},
+		investmentFunds: map[uuid.UUID][]*model.Fund{
+			fixedInvestmentID: {
+				{
+					ID:         fixedFundID,
+					Name:       fundNameCushonEquity,
+					Category:   fundTypeEQUITY,
+					Currency:   fundCurrencyGBP,
+					Amount:     20000.00,
+					RiskReturn: fundRiskLOW,
 				},
 			},
 		},
@@ -37,9 +59,20 @@ func (m *MockInvestmentRepository) GetByAccountID(id uuid.UUID) ([]*model.Invest
 	}
 	investments, exists := m.investments[id]
 	if !exists {
-		return nil, nil
+		return []*model.Investment{}, nil
 	}
 	return investments, nil
+}
+
+func (m *MockInvestmentRepository) GetInvestmentFundsByID(id uuid.UUID) ([]*model.Fund, error) {
+	if m.err != nil {
+		return nil, m.err
+	}
+	funds, exists := m.investmentFunds[id]
+	if !exists {
+		return []*model.Fund{}, nil
+	}
+	return funds, nil
 }
 
 func (m *MockInvestmentRepository) Create(investment *model.Investment) (*model.Investment, error) {
@@ -66,7 +99,7 @@ func TestInvestmentService_Create(t *testing.T) {
 			investment: &model.Investment{
 				ID:        fixedInvestmentID,
 				AccountID: fixedAccountID,
-				FundID:    fixedFundID,
+				Funds:     []*model.Fund{{ID: fixedFundID, Amount: 20000.00}},
 				Amount:    20000.00,
 				Status:    statusPending,
 				CreatedAt: fixedTime,
@@ -78,7 +111,7 @@ func TestInvestmentService_Create(t *testing.T) {
 			want: &model.Investment{
 				ID:        fixedInvestmentID,
 				AccountID: fixedAccountID,
-				FundID:    fixedFundID,
+				Funds:     []*model.Fund{{ID: fixedFundID, Amount: 20000.00}},
 				Amount:    20000.00,
 				Status:    statusPending,
 				CreatedAt: fixedTime,
@@ -91,7 +124,7 @@ func TestInvestmentService_Create(t *testing.T) {
 			investment: &model.Investment{
 				ID:        fixedInvestmentID,
 				AccountID: fixedAccountID,
-				FundID:    fixedFundID,
+				Funds:     []*model.Fund{{ID: fixedFundID, Amount: 25000.00}},
 				Amount:    25000.00,
 				Status:    statusPending,
 				CreatedAt: fixedTime,
@@ -108,7 +141,7 @@ func TestInvestmentService_Create(t *testing.T) {
 			investment: &model.Investment{
 				ID:        fixedInvestmentID,
 				AccountID: fixedAccountID,
-				FundID:    fixedFundID,
+				Funds:     []*model.Fund{{ID: fixedFundID, Amount: 0.99}},
 				Amount:    0.99,
 				Status:    statusPending,
 				CreatedAt: fixedTime,
@@ -125,7 +158,7 @@ func TestInvestmentService_Create(t *testing.T) {
 			investment: &model.Investment{
 				ID:        fixedInvestmentID,
 				AccountID: fixedAccountID,
-				FundID:    fixedFundID,
+				Funds:     []*model.Fund{{ID: fixedFundID, Amount: 20000.00}},
 				Amount:    20000.00,
 				Status:    statusPending,
 				CreatedAt: fixedTime,
@@ -142,7 +175,7 @@ func TestInvestmentService_Create(t *testing.T) {
 			investment: &model.Investment{
 				ID:        fixedInvestmentID,
 				AccountID: fixedAccountID,
-				FundID:    fixedFundID,
+				Funds:     []*model.Fund{{ID: fixedFundID, Amount: 20000.00}},
 				Amount:    20000.00,
 				Status:    statusPending,
 				CreatedAt: fixedTime,
@@ -171,8 +204,8 @@ func TestInvestmentService_Create(t *testing.T) {
 			investment: &model.Investment{
 				ID:        fixedInvestmentID,
 				AccountID: fixedAccountID,
-				FundID:    fixedFundID,
-				Amount:    25000.00,
+				Funds:     []*model.Fund{{ID: fixedFundID, Amount: 20000.00}},
+				Amount:    20000.00,
 				Status:    statusPending,
 				CreatedAt: fixedTime,
 				UpdatedAt: fixedTime,
@@ -200,8 +233,8 @@ func TestInvestmentService_Create(t *testing.T) {
 			investment: &model.Investment{
 				ID:        fixedInvestmentID,
 				AccountID: fixedAccountID,
-				FundID:    fixedFundID,
-				Amount:    25000.00,
+				Funds:     []*model.Fund{{ID: fixedFundID, Amount: 20000.00}},
+				Amount:    20000.00,
 				Status:    statusPending,
 				CreatedAt: fixedTime,
 				UpdatedAt: fixedTime,

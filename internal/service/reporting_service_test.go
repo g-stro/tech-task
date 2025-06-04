@@ -16,7 +16,7 @@ func TestReportingService_GetInvestmentsByAccountID(t *testing.T) {
 		mockInvestmentRepo *MockInvestmentRepository
 		mockAccountRepo    *MockAccountRepository
 		mockFundRepo       *MockFundRepository
-		want               []*InvestmentDetails
+		want               []*model.Investment
 		wantErr            bool
 	}{
 		{
@@ -25,22 +25,24 @@ func TestReportingService_GetInvestmentsByAccountID(t *testing.T) {
 			mockInvestmentRepo: NewMockInvestmentRepository(),
 			mockAccountRepo:    NewMockAccountRepository(),
 			mockFundRepo:       NewMockFundRepository(),
-			want: []*InvestmentDetails{
+			want: []*model.Investment{
 				{
 					ID:        fixedInvestmentID,
+					AccountID: fixedAccountID,
+					Funds: []*model.Fund{
+						{
+							ID:         fixedFundID,
+							Name:       fundNameCushonEquity,
+							Category:   fundTypeEQUITY,
+							Currency:   fundCurrencyGBP,
+							Amount:     20000.00,
+							RiskReturn: fundRiskLOW,
+						},
+					},
 					Amount:    20000.00,
 					Status:    statusPending,
 					CreatedAt: fixedTime,
 					UpdatedAt: fixedTime,
-					Fund: &model.Fund{
-						ID:         fixedFundID,
-						Name:       fundNameCushonEquity,
-						Category:   fundTypeEQUITY,
-						Currency:   fundCurrencyGBP,
-						RiskReturn: fundRiskLOW,
-						CreatedAt:  fixedTime,
-						UpdatedAt:  fixedTime,
-					},
 				},
 			},
 			wantErr: false,
@@ -60,7 +62,7 @@ func TestReportingService_GetInvestmentsByAccountID(t *testing.T) {
 			mockInvestmentRepo: &MockInvestmentRepository{},
 			mockAccountRepo:    NewMockAccountRepository(),
 			mockFundRepo:       &MockFundRepository{},
-			want:               []*InvestmentDetails{},
+			want:               []*model.Investment{},
 			wantErr:            false,
 		},
 	}
