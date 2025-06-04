@@ -39,7 +39,7 @@ func (r *AccountRepository) GetByID(id uuid.UUID) (*model.Account, error) {
 		return nil, nil
 	}
 	if err != nil {
-		log.Printf("error retrieving account %v: %e", account.ID, err)
+		log.Printf("error retrieving account %v: %v", account.ID, err)
 		return nil, fmt.Errorf("failed to fetch account with ID %v: %w", id, err)
 	}
 

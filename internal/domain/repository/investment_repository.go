@@ -8,4 +8,5 @@ import (
 type InvestmentRepository interface {
 	Create(*model.Investment) (*model.Investment, error)
 	GetByAccountID(id uuid.UUID) ([]*model.Investment, error)
+	GetInvestmentFundsByID(id uuid.UUID) ([]*model.Fund, error)
 }

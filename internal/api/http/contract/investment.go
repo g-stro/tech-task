@@ -1,7 +1,6 @@
 package contract
 
 import (
-	"github.com/g-stro/tech-task/internal/domain/model"
 	"github.com/google/uuid"
 )
 
@@ -16,10 +15,19 @@ type InvestmentResponse struct {
 }
 
 type InvestmentDetailsResponse struct {
-	ID        string     `json:"id"`
-	Amount    float64    `json:"amount"`
-	Status    string     `json:"status"`
-	CreatedAt string     `json:"created_at"`
-	UpdatedAt string     `json:"updated_at"`
-	Fund      model.Fund `json:"fund"`
+	ID        string                    `json:"id"`
+	Amount    float64                   `json:"amount"`
+	Status    string                    `json:"status"`
+	CreatedAt string                    `json:"created_at"`
+	UpdatedAt string                    `json:"updated_at"`
+	Funds     []InvestmentFundsResponse `json:"funds"`
+}
+
+type InvestmentFundsResponse struct {
+	ID         string  `json:"id"`
+	Name       string  `json:"name"`
+	Category   string  `json:"category"`
+	Currency   string  `json:"currency"`
+	Amount     float64 `json:"amount"`
+	RiskReturn string  `json:"risk_return"`
 }

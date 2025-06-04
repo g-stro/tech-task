@@ -27,10 +27,12 @@ func (h *InvestmentHandler) HandleInvestmentRequest(w http.ResponseWriter, r *ht
 	}
 }
 
+// CreateInvestment creates a new investment with a single fund.
+// Note: The fund amount will match the investment amount. This would need to be changed once multiple funds are supported.
 func (h *InvestmentHandler) createInvestment(w http.ResponseWriter, r *http.Request) {
 	var req contract.InvestmentRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		log.Printf("error deconding JSON: %e", err)
+		log.Printf("error deconding JSON: %v", err)
 		http.Error(w, "invalid request body", http.StatusBadRequest)
 		return
 	}
@@ -38,7 +40,7 @@ func (h *InvestmentHandler) createInvestment(w http.ResponseWriter, r *http.Requ
 	investment := &model.Investment{
 		ID:        uuid.New(),
 		AccountID: req.AccountID,
-		FundID:    req.FundID,
+		Funds:     []*model.Fund{{ID: req.FundID, Amount: req.Amount}}, // Only 1 fund for now
 		Amount:    req.Amount,
 		Status:    "PENDING", // Default
 	}

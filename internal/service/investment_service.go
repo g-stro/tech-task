@@ -29,7 +29,7 @@ func NewInvestmentService(investRepo repository.InvestmentRepository, accRepo re
 // ProcessInvestment validates and persists the investment before generating an event for further processing by other services (not implemented)
 func (s *InvestmentService) ProcessInvestment(investment *model.Investment) (*model.Investment, error) {
 	// Validate the investments
-	if err := s.validateInvestment(investment.AccountID, investment.FundID, investment.Amount); err != nil {
+	if err := s.validateInvestment(investment.AccountID, investment.Funds, investment.Amount); err != nil {
 		log.Printf("error validating investment: %v", err)
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func (s *InvestmentService) ProcessInvestment(investment *model.Investment) (*mo
 }
 
 // validateInvestment performs validation for a new investment
-func (s *InvestmentService) validateInvestment(accountID, fundID uuid.UUID, amount float64) error {
+func (s *InvestmentService) validateInvestment(accountID uuid.UUID, funds []*model.Fund, amount float64) error {
 	// Check account exists and is active
 	account, err := s.accountRepo.GetByID(accountID)
 	if err != nil {
@@ -66,11 +66,12 @@ func (s *InvestmentService) validateInvestment(accountID, fundID uuid.UUID, amou
 		return errors.New("account is not an ISA")
 	}
 
-	// Check if fund exists
-	// Single fund for now, a future change would involve fetching and validating multiple funds
-	fund, err := s.fundRepo.GetByID(fundID)
-	if err != nil || fund == nil {
-		return errors.New("fund not found")
+	// Check if funds exist
+	for _, fund := range funds {
+		fund, err := s.fundRepo.GetByID(fund.ID)
+		if err != nil || fund == nil {
+			return errors.New("fund not found")
+		}
 	}
 
 	// Validate amount

@@ -19,7 +19,7 @@ func NewFundRepository(db *DB) *FundRepository {
 
 func (r FundRepository) GetByID(id uuid.UUID) (*model.Fund, error) {
 	query := `
-        SELECT id, name, category, currency, risk_return, created_at, updated_at
+        SELECT id, name, category, currency, risk_return
         FROM funds
         WHERE id = $1
     `
@@ -31,15 +31,13 @@ func (r FundRepository) GetByID(id uuid.UUID) (*model.Fund, error) {
 		&fund.Category,
 		&fund.Currency,
 		&fund.RiskReturn,
-		&fund.CreatedAt,
-		&fund.UpdatedAt,
 	)
 	if errors.Is(err, sql.ErrNoRows) {
 		log.Printf("fund %v not found", id)
 		return nil, nil
 	}
 	if err != nil {
-		log.Printf("error retrieving fund %v: %e", id, err)
+		log.Printf("error retrieving fund %v: %v", id, err)
 		return nil, fmt.Errorf("failed to fetch fund with ID %v: %w", id, err)
 	}
 

@@ -22,7 +22,7 @@ This repository implements a solution for the Software Engineer recruitment scen
 ---
 
 ## Solution
-This solution focuses primarily on handling customer investment requests and reporting investment history. While the brief mentioned the customer should be able to select a single fund from a list of available options, I chose not to implement this or any kind of frontend. Instead, I decided to direct focus toward the functionality of the backend.
+This solution focuses primarily on handling customer investment requests and reporting investment history. While the brief mentioned the customer should be able to select a single fund from a list of available options, I chose not to implement this or any kind of frontend. Instead, I decided to direct focus toward the functionality of the backend and have accounted for this future enhancement in the design.
 I have chosen a layered architecture approach following Domain-Driven Design principles. The system separates investment processing from reporting to allow for future decoupling into microservices. 
 I have created domain models with appropriate relationships reflecting business domains, and used interfaces to abstract data access, allowing for easier testability and flexibility.
 
@@ -192,22 +192,23 @@ DB_PORT_TEST=5433
    Example response:
    ```json
    [
-       {
-           "id": "22be3b86-8c97-4429-855f-c3478d14230a",
-           "amount": 20000,
-           "status": "PENDING",
-           "created_at": "2025-06-03 15:24:05",
-           "updated_at": "2025-06-03 15:24:05",
-           "fund": {
+      {
+        "id": "f9d7338c-62e9-4f60-8d3a-9082f1616a23",
+        "amount": 20000,
+        "status": "PENDING",
+        "created_at": "2025-06-04 11:39:50",
+        "updated_at": "2025-06-04 11:39:50",
+        "funds": [
+            {
                "id": "cb91e975-d8bc-423b-bc99-fa6f396c2eaf",
                "name": "Cushon Equities Fund",
                "category": "EQUITY",
                "currency": "GBP",
-               "risk_return": "LOW",
-               "created_at": "2025-06-03T15:21:09.802108Z",
-               "updated_at": "2025-06-03T15:21:09.802108Z"
+               "amount": 20000,
+               "risk_return": "LOW"
            }
-       }
+       ]
+     }
    ]
    ```
 ---

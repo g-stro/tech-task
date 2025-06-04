@@ -23,19 +23,32 @@ CREATE TABLE funds (
     name VARCHAR(100) NOT NULL,
     category VARCHAR(20) NOT NULL, -- EQUITY, BOND, etc.
     currency VARCHAR(3) NOT NULL DEFAULT 'GBP',
-    risk_return VARCHAR(10), -- LOW, MEDIUM, HIGH, VERY_HIGH
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    risk_return VARCHAR(10) -- LOW, MEDIUM, HIGH, VERY_HIGH
 );
 
 CREATE TABLE investments (
      id UUID PRIMARY KEY,
      account_id UUID NOT NULL REFERENCES accounts(id),
-     fund_id UUID NOT NULL REFERENCES funds(id),
      amount DECIMAL(7, 2) NOT NULL,
      status VARCHAR(10) NOT NULL DEFAULT 'PENDING',
      created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
      updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX idx_investments_account_id ON investments(account_id);
+
+CREATE TABLE investment_funds (
+    id UUID PRIMARY KEY,
+    investment_id UUID NOT NULL REFERENCES investments(id) ON DELETE CASCADE,
+    fund_id UUID NOT NULL REFERENCES funds(id),
+    amount DECIMAL(7, 2) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(investment_id, fund_id)
+);
+
+CREATE INDEX idx_investment_funds_investment_id ON investment_funds(investment_id);
+CREATE INDEX idx_investment_funds_fund_id ON investment_funds(fund_id);
+
 
 COMMIT;
